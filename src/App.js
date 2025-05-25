@@ -6,7 +6,7 @@ import Recruteur from './pages/Recruteur';
 import MissionsFreelance from './pages/MissionsFreelance';
 import MissionsCDI from './pages/MissionsCDI';
 import Formatheque from './pages/Formatheque';
-import InscriptionModal from './components/InscriptionModal'; // ✅ import modale
+import InscriptionModal from './components/InscriptionModal'; // ✅ import modale.
 
 function App() {
   const [showModal, setShowModal] = useState(false); // ✅ état pour gérer la modale
