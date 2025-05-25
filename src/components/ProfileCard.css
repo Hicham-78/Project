@@ -1,0 +1,53 @@
+.profile-card {
+    background: #111;
+    border: 1px solid #0f0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 260px;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .profile-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px #0f0, 0 0 30px #f00;
+  }
+  
+  .profile-name {
+    font-size: 1.2rem;
+    color: #f00;
+    margin: 0;
+  }
+  
+  .profile-role {
+    font-size: 0.9rem;
+    color: #0f0;
+    font-style: italic;
+  }
+  
+  .profile-skills,
+  .profile-location,
+  .profile-availability {
+    font-size: 0.85rem;
+    opacity: 0.8;
+  }
+  
+  .contact-button {
+    margin-top: auto;
+    padding: 0.5rem;
+    background: linear-gradient(90deg, #f00, #0f0);
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .contact-button:hover {
+    background: linear-gradient(90deg, #0f0, #f00);
+  }
+  

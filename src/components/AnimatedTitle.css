@@ -1,0 +1,29 @@
+
+
+.animated-title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    background: linear-gradient(270deg, #ff416c, #ff4b2b, #ff416c);
+    background-size: 600% 600%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+  
+    transform: rotateX(5deg) rotateY(5deg);
+    animation: gradientMove 6s ease infinite, float 3s ease-in-out infinite;
+  }
+  
+  @keyframes gradientMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  @keyframes float {
+    0% { transform: rotateX(5deg) rotateY(5deg) translateY(0px); }
+    50% { transform: rotateX(5deg) rotateY(5deg) translateY(-10px); }
+    100% { transform: rotateX(5deg) rotateY(5deg) translateY(0px); }
+  }
+  
