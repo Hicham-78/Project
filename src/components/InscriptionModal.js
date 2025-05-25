@@ -3,7 +3,6 @@ import './InscriptionModal.css';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, setDoc } from 'firebase/firestore';
-
 const skillsList = [
   'Cybersécurité',
   'IA et Machine Learning',
