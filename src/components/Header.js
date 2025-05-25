@@ -1,10 +1,21 @@
-// src/components/Header.js
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Header.css';
 import { FaUserPlus } from 'react-icons/fa';
+import { getAuth, signOut } from 'firebase/auth';
 
-export default function Header({ onOpenModal }) {
+export default function Header({ user, onOpenModal }) {
+  const auth = getAuth();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Optionnel : tu peux faire un redirect ou reset état après déconnexion
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion :', error);
+    }
+  };
+
   return (
     <header className="site-header">
       {/* Logo + titre */}
@@ -23,12 +34,21 @@ export default function Header({ onOpenModal }) {
         </ul>
       </nav>
 
-      {/* Bouton Auth */}
+      {/* Bouton Auth / Déconnexion */}
       <div className="header-right">
-        <button className="auth-button" onClick={onOpenModal}>
-          <FaUserPlus />
-          <span>Inscription / Connexion</span>
-        </button>
+        {user ? (
+          <>
+            <span className="user-email">Connecté : {user.email}</span>
+            <button className="auth-button logout-button" onClick={handleLogout}>
+              Déconnexion
+            </button>
+          </>
+        ) : (
+          <button className="auth-button" onClick={onOpenModal}>
+            <FaUserPlus />
+            <span>Inscription / Connexion</span>
+          </button>
+        )}
       </div>
     </header>
   );

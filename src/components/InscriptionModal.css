@@ -103,4 +103,13 @@
     padding: 0.5rem 1rem;
     cursor: pointer;
   }
+  .error-message {
+    color: #d93025;
+    margin: 10px 0;
+  }
+  
+  .success-message {
+    color: #188038;
+    margin: 10px 0;
+  }
   

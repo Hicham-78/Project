@@ -3,6 +3,7 @@ import './InscriptionModal.css';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { doc, setDoc } from 'firebase/firestore';
+
 const skillsList = [
   'Cybersécurité',
   'IA et Machine Learning',
@@ -24,7 +25,7 @@ const skillsList = [
 const InscriptionModal = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('inscription');
 
-  // States inscription
+  // États inscription
   const [nom, setNom] = useState('');
   const [prenom, setPrenom] = useState('');
   const [emailInscription, setEmailInscription] = useState('');
@@ -32,9 +33,14 @@ const InscriptionModal = ({ isOpen, onClose }) => {
   const [metier, setMetier] = useState('Freelance');
   const [selectedSkills, setSelectedSkills] = useState([]);
 
-  // States connexion
+  // États connexion
   const [emailConnexion, setEmailConnexion] = useState('');
   const [passwordConnexion, setPasswordConnexion] = useState('');
+
+  // États messages & loading
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
@@ -46,6 +52,10 @@ const InscriptionModal = ({ isOpen, onClose }) => {
 
   const handleInscription = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+    setLoading(true);
+
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, emailInscription, passwordInscription);
       const user = userCredential.user;
@@ -59,8 +69,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
         dateInscription: new Date()
       });
 
-      alert("Inscription réussie !");
-      onClose();
+      setSuccessMessage("Inscription réussie !");
       // reset form
       setNom('');
       setPrenom('');
@@ -68,23 +77,42 @@ const InscriptionModal = ({ isOpen, onClose }) => {
       setPasswordInscription('');
       setMetier('Freelance');
       setSelectedSkills([]);
+
+      setTimeout(() => {
+        setSuccessMessage('');
+        onClose();
+      }, 1500);
+
     } catch (error) {
-      alert("Erreur d'inscription : " + error.message);
+      setErrorMessage("Erreur d'inscription : " + error.message);
     }
+
+    setLoading(false);
   };
 
   const handleConnexion = async (e) => {
     e.preventDefault();
+    setErrorMessage('');
+    setSuccessMessage('');
+    setLoading(true);
+
     try {
       await signInWithEmailAndPassword(auth, emailConnexion, passwordConnexion);
-      alert("Connecté !");
-      onClose();
+      setSuccessMessage("Connexion réussie !");
       // reset form
       setEmailConnexion('');
       setPasswordConnexion('');
+
+      setTimeout(() => {
+        setSuccessMessage('');
+        onClose();
+      }, 1500);
+
     } catch (error) {
-      alert("Erreur de connexion : " + error.message);
+      setErrorMessage("Erreur de connexion : " + error.message);
     }
+
+    setLoading(false);
   };
 
   return (
@@ -93,17 +121,22 @@ const InscriptionModal = ({ isOpen, onClose }) => {
         <div className="modal-tabs">
           <button
             className={activeTab === 'inscription' ? 'active' : ''}
-            onClick={() => setActiveTab('inscription')}
+            onClick={() => { setActiveTab('inscription'); setErrorMessage(''); setSuccessMessage(''); }}
+            disabled={loading}
           >
             Inscription
           </button>
           <button
             className={activeTab === 'connexion' ? 'active' : ''}
-            onClick={() => setActiveTab('connexion')}
+            onClick={() => { setActiveTab('connexion'); setErrorMessage(''); setSuccessMessage(''); }}
+            disabled={loading}
           >
             Connexion
           </button>
         </div>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
 
         {activeTab === 'inscription' && (
           <form className="inscription-form" onSubmit={handleInscription}>
@@ -115,6 +148,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                 value={nom}
                 onChange={e => setNom(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="form-group">
@@ -125,6 +159,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                 value={prenom}
                 onChange={e => setPrenom(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="form-group">
@@ -135,6 +170,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                 value={emailInscription}
                 onChange={e => setEmailInscription(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="form-group">
@@ -145,6 +181,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                 value={passwordInscription}
                 onChange={e => setPasswordInscription(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="form-group">
@@ -152,6 +189,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
               <select
                 value={metier}
                 onChange={e => setMetier(e.target.value)}
+                disabled={loading}
               >
                 <option>Freelance</option>
                 <option>CDI</option>
@@ -167,6 +205,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                       type="checkbox"
                       checked={selectedSkills.includes(skill)}
                       onChange={() => toggleSkill(skill)}
+                      disabled={loading}
                     />
                     {skill}
                   </label>
@@ -174,8 +213,12 @@ const InscriptionModal = ({ isOpen, onClose }) => {
               </div>
             </div>
             <div className="modal-actions">
-              <button type="submit" className="submit-btn">S'inscrire</button>
-              <button type="button" className="cancel-btn" onClick={onClose}>Annuler</button>
+              <button type="submit" disabled={loading} className="submit-btn">
+                {loading ? 'Patientez...' : "S'inscrire"}
+              </button>
+              <button type="button" className="cancel-btn" onClick={onClose} disabled={loading}>
+                Annuler
+              </button>
             </div>
           </form>
         )}
@@ -190,6 +233,7 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                 value={emailConnexion}
                 onChange={e => setEmailConnexion(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="form-group">
@@ -200,11 +244,16 @@ const InscriptionModal = ({ isOpen, onClose }) => {
                 value={passwordConnexion}
                 onChange={e => setPasswordConnexion(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div className="modal-actions">
-              <button type="submit" className="submit-btn">Se connecter</button>
-              <button type="button" className="cancel-btn" onClick={onClose}>Annuler</button>
+              <button type="submit" disabled={loading} className="submit-btn">
+                {loading ? 'Patientez...' : "Se connecter"}
+              </button>
+              <button type="button" className="cancel-btn" onClick={onClose} disabled={loading}>
+                Annuler
+              </button>
             </div>
           </form>
         )}
