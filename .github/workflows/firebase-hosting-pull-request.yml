@@ -17,5 +17,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_IT_QUALITY_DF21E }}
-          projectId: it-quality-df21e
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_foot-ai }}
+          projectId: foot-ai
